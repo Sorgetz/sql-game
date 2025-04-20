@@ -10,11 +10,11 @@ export function FriendMessage({
     if (message.match(regex)) {
       const spliMessage = message.split(regex);
       return (
-        <p>
+        <p className="wrap-break-word">
           {spliMessage[0]}
           <button
             onClick={() => newWord(spliMessage[1])}
-            className="cursor-pointer font-bold"
+            className="cursor-pointer font-bold wrap-break-word"
           >
             {spliMessage[1]}
           </button>

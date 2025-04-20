@@ -28,7 +28,7 @@ export function Window({
     >
       <div
         id={`tab-${id}`}
-        className="border-2 border-black cursor-pointer px-2 text-white"
+        className="border-black border-b-2 cursor-pointer px-2 text-white"
         style={{ backgroundColor: color }}
       >
         {id}
