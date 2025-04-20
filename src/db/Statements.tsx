@@ -1,12 +1,12 @@
-import { useEffect, useState } from 'react';
-import initSqlJs, { Database } from 'sql.js';
+import { useEffect, useState } from "react";
+import initSqlJs, { Database } from "sql.js";
 
 async function createDB() {
-    const SQL = await initSqlJs({
-        locateFile: (file: string) => `https://sql.js.org/dist/${file}`
-    });
-    const db = new SQL.Database();
-    const sql = `
+  const SQL = await initSqlJs({
+    locateFile: (file: string) => `https://sql.js.org/dist/${file}`,
+  });
+  const db = new SQL.Database();
+  const sql = `
         CREATE TABLE IF NOT EXISTS usuarios (
             id INTEGER PRIMARY KEY AUTOINCREMENT,
             nome TEXT NOT NULL,
@@ -26,21 +26,20 @@ async function createDB() {
         INSERT INTO check_in_pet(cliente, horario_entrada, horario_saida) VALUES ('Gilmar', '2025-04-13 22:42:00', '2025-04-13 22:55:00');
         INSERT INTO check_in_pet(cliente, horario_entrada, horario_saida) VALUES ('Zezinho', '2025-04-13 13:40:00', '2025-04-13 23:44:00');
     `;
-    db.run(sql);
-    return db;
+  db.run(sql);
+  return db;
 }
 
-function runQuery( query : string, db : Database ) {
-    try {
-        const result = db.exec(query);
-        const columns = result[0] ? result[0].columns : [];
-        const values = result[0] ? result[0].values : [];
-        
-        return { columns, values };
-    } catch (e) {
-        console.log('ainda nao')
-    }
-    
+function runQuery(query: string, db: Database) {
+  try {
+    const result = db.exec(query);
+    const columns = result[0] ? result[0].columns : [];
+    const values = result[0] ? result[0].values : [];
+
+    return { columns, values };
+  } catch (e) {
+    console.log("ainda nao");
+  }
 }
 
 export function Statements({
@@ -69,8 +68,8 @@ export function Statements({
 
   return (
     sqlQuery.length > 0 && (
-      <div className="relative flex flex-col w-full h-full overflow-scroll text-gray-700 bg-white shadow-md rounded-lg bg-clip-border">
-        <table className="w-full text-left table-auto min-w-max">
+      <div className="relative flex flex-col overflow-x-auto text-gray-700 bg-white shadow-md rounded-lg bg-clip-border max-h-100">
+        <table className=" text-left table-auto ">
           <thead>
             <tr>
               {columns.map((column, index) => (

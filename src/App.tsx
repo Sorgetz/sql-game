@@ -2,9 +2,10 @@ import { useEffect, useState } from "react";
 import { Statements } from "./db/Statements";
 import { Sidebar } from "./chat/Sidebar";
 import { Messages } from "./chat/Messages";
-import { Window } from "./Window";
+import { Window } from "./components/Window";
 import { ConfirmAnswer } from "./db/ConfirmAnswer";
 import Confetti from "react-confetti";
+import { Button } from "./components/Button";
 
 function App() {
   const [sqlQuery, setSqlQuery] = useState("");
@@ -62,32 +63,28 @@ function App() {
       {confetti && <Confetti width={width} height={height} />}
 
       <div id="container" className="bg-[#CCA3FF] w-300 h-150">
-          <Window id="sql-ui">
-            <textarea className="border-2 border-black" value={sqlQuery} />
-            <div className="flex">
+        <Window id="sql-ui">
+          <div
+            id="sql-ui-container"
+            className=" w-100 max-h-120 overflow-y-auto p-2"
+          >
+            <textarea
+              className="h-10 border-2 border-black m-1 w-[95%]"
+              rows={3}
+              value={sqlQuery}
+            />
+            <div className="flex-wrap">
               {Array.from(sqlWords).map((word) => (
-                <button
-                  className="bg-indigo-500 text-white p-4 m-1 rounded"
-                  onClick={handleButton}
-                >
-                  {word}
-                </button>
+                <Button onClick={handleButton}>{word}</Button>
               ))}
 
-              <button
-                className="bg-indigo-500 text-white p-4 m-1 rounded"
-                onClick={() => setSqlQuery("")}
-              >
-                LIMPAR
-              </button>
-              <button
-                className="bg-indigo-500 text-white font-bold p-4 m-1 rounded"
-                onClick={handleRemove}
-              >{`<`}</button>
+              <Button onClick={() => setSqlQuery("")}>LIMPAR</Button>
+              <Button onClick={handleRemove}>{`<`}</Button>
             </div>
 
             <Statements sqlQuery={sqlQuery} validateAnswer={openModal} />
-          </Window>
+          </div>
+        </Window>
 
         <Window id="chat">
           <div className="w-100 h-100 flex">

@@ -1,4 +1,6 @@
-import { SetStateAction } from "react";
+import { SetStateAction, useState } from "react";
+import { Window } from "../components/Window";
+import { Button } from "../components/Button";
 
 export function ConfirmAnswer({
   closeModal,
@@ -6,9 +8,11 @@ export function ConfirmAnswer({
   guess,
 }: {
   closeModal: () => void;
-  setConfetti : React.Dispatch<SetStateAction<boolean>>;
+  setConfetti: React.Dispatch<SetStateAction<boolean>>;
   guess: initSqlJs.SqlValue[];
 }) {
+  const [isWrong, setIsWrong] = useState(false);
+
   function validateAnswer() {
     let checker = (arr: string[], target: string[]) => {
       return target.every((v) => arr.includes(v));
@@ -19,24 +23,35 @@ export function ConfirmAnswer({
 
     if (!checker(guessAnswer, correctAnswer)) {
       console.log("EROWWWWWWWWWWWWWWWWWWWWWWWWWWW");
+      setIsWrong(true);
     } else {
-        closeModal();
+      closeModal();
       setConfetti(true);
     }
   }
   return (
     <>
-      <div className="w-screen h-screen bg-black/25 flex justify-center items-center fixed z-[1000]">
-        <div className="border-2 border-black w-50 p-4 bg-white">
-          <p>Tem certezas? {guess.join(" - ")}</p>
-          <button onClick={validateAnswer} className="cursor-pointer">
-            Sim
-          </button>
-          <button onClick={closeModal} className="cursor-pointer">
-            Não
-          </button>
+      {!isWrong ? (
+        <div className="w-screen h-screen bg-black/25 flex justify-center items-center fixed z-[1000]">
+          <Window id="confirm">
+            <div className="border-2 border-black w-50 p-4 bg-white">
+              <p>Tem certezas?</p>
+              <p>{guess.join(" - ")}</p>
+              <Button onClick={validateAnswer}>Sim</Button>
+              <Button onClick={closeModal}>Não</Button>
+            </div>
+          </Window>
         </div>
-      </div>
+      ) : (
+        <div className="w-screen h-screen bg-black/25 flex justify-center items-center fixed z-[1000]">
+          <Window id="confirm">
+            <div className="border-2 border-black w-50 p-4 bg-white">
+              <p>ERRRROWWWWWWW?</p>
+              <Button onClick={closeModal}>Sair</Button>
+            </div>
+          </Window>
+        </div>
+      )}
     </>
   );
 }
