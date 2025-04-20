@@ -1,4 +1,4 @@
-export function Choices({ choices, setChoices }) {
+/* export function Choices({ choices, setChoices }) {
     function choseOption(e) {
         setChoices(e.target.textContent)
     }
@@ -14,4 +14,4 @@ export function Choices({ choices, setChoices }) {
             )}
         </div>
     )
-}
+} */

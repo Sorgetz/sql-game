@@ -13,6 +13,7 @@
     "@tailwindcss/vite": "^4.1.4",
     "@types/sql.js": "^1.4.9",
     "react": "^19.0.0",
+    "react-confetti": "^6.4.0",
     "react-dom": "^19.0.0",
     "sql.js": "^1.13.0",
     "tailwind": "^4.0.0",

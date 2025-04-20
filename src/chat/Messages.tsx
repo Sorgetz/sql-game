@@ -1,19 +1,18 @@
 import { useEffect, useState } from "react";
-import { Choices } from "./choices";
-import { FriendMessage } from "./friendMessage";
+import { FriendMessage } from "./FriendMessage";
 import { UserMessage } from "./UserMessage";
-import { dialog_first_character, IMessages } from "./dialogs";
+import { dialog_first_character, IMessages } from "./Dialogs";
 
 export function Messages( {newWord} : {newWord: (text: string) => void} ) {
 	const initalMessages : IMessages[] = [{
 		user: 'Outro',
-		messages: ['Eae, campeão, tudo bueno?', 'Como vais?', 'fiquei sabendo de algo top']
+		messages: ['Eae, [&campeão&], tudo bueno?', 'Como vais?', 'fiquei sabendo de algo top']
 	}]
 
-	const [choice, setChoices] = useState('opcao1')
+	const [choices, setChoices] = useState(['opcao1'])
 	const [messages, setMessages] = useState(initalMessages)
 	useEffect(() => {
-	}, [choice, messages])
+	}, [choices, messages])
 
 	function choseOption(e: React.MouseEvent<HTMLButtonElement, MouseEvent>) {
 		const choice = e.currentTarget.textContent as string;
@@ -27,21 +26,17 @@ export function Messages( {newWord} : {newWord: (text: string) => void} ) {
 			messages: dialog_first_character[index].sendMessages
 		}
 		setMessages(prevMessages => [...prevMessages, newUserMessage, newOtherMessage]);
+		setChoices(dialog_first_character[index].choices);
 		console.log(messages);
-	}
-
-	function getChoicesOptions() {
-		const index = dialog_first_character.findIndex(option => option.name == choice)
-		return dialog_first_character[index].choices
 	}
 
 	return (
 		<>
-			<div className="border-2 border-amber-950 w-[70%] h-screen" >
+			<div className="overflow-y-auto" >
 				{messages.map((obj, index) => {
 					return obj.user === 'Outro' ? (
 						obj.messages.map((msg, idx) => (
-							<FriendMessage key={`${index}-${idx}`} message={msg} />
+							<FriendMessage key={`${index}-${idx}`} message={msg} newWord={newWord} />
 						))
 					) : (
 						obj.messages.map((msg, idx) => (
@@ -50,9 +45,9 @@ export function Messages( {newWord} : {newWord: (text: string) => void} ) {
 					);
 				})}
 
-				{choice != null &&
+				{choices != null &&
 					<div className="flex flex-col items-end">
-						{getChoicesOptions().map(choice =>
+						{choices.map(choice =>
 							<>
 								<button onClick={choseOption} className="cursor-pointer rounded-xl rounded-tr-none hover:bg-amber-950 bg-amber-600 p-2 mx-2 text-white max-w-[70%] wrap-break-word">
 									{choice}

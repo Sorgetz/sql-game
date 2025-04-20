@@ -43,45 +43,63 @@ function runQuery( query : string, db : Database ) {
     
 }
 
-export function Statements( {sqlQuery} : {sqlQuery: string} ) {
-    const [columns, setColumns] = useState<string[]>([]);
-    const [values, setValues] = useState<initSqlJs.SqlValue[][]>([]);
+export function Statements({
+  sqlQuery,
+  validateAnswer,
+}: {
+  sqlQuery: string;
+  validateAnswer: (row: initSqlJs.SqlValue[]) => void;
+}) {
+  const [columns, setColumns] = useState<string[]>([]);
+  const [values, setValues] = useState<initSqlJs.SqlValue[][]>([]);
 
-    useEffect(() => {
-        const fetchData = async () => {
-            const db = await createDB();
-            if(sqlQuery != "") {
-                const result = runQuery(sqlQuery, db);
-                if (result) {
-                    setColumns(result.columns);
-                    setValues(result.values);
-                }
-            }
-        };
-        fetchData();
-    }, [sqlQuery]);
+  useEffect(() => {
+    const fetchData = async () => {
+      const db = await createDB();
+      if (sqlQuery != "") {
+        const result = runQuery(sqlQuery, db);
+        if (result) {
+          setColumns(result.columns);
+          setValues(result.values);
+        }
+      }
+    };
+    fetchData();
+  }, [sqlQuery]);
 
-    return sqlQuery.length > 0 && (
-        <div>
-            <h2>Oiii</h2>
-            <table>
-                <thead>
-                    <tr>
-                        {columns.map((column, index) => (
-                            <th key={index}>{column}</th>
-                        ))}
-                    </tr>
-                </thead>
-                <tbody>
-                    {values.map((row, rowIndex) => (
-                        <tr key={rowIndex}>
-                            {row.map((value, colIndex) => (
-                                <td key={colIndex}>{value}</td>
-                            ))}
-                        </tr>
-                    ))}
-                </tbody>
-            </table>
-        </div>
-    );
+  return (
+    sqlQuery.length > 0 && (
+      <div className="relative flex flex-col w-full h-full overflow-scroll text-gray-700 bg-white shadow-md rounded-lg bg-clip-border">
+        <table className="w-full text-left table-auto min-w-max">
+          <thead>
+            <tr>
+              {columns.map((column, index) => (
+                <th
+                  className="p-4 border-b border-slate-300 bg-slate-50"
+                  key={index}
+                >
+                  {column}
+                </th>
+              ))}
+            </tr>
+          </thead>
+          <tbody>
+            {values.map((row, rowIndex) => (
+              <tr
+                onClick={() => validateAnswer(row)}
+                className="hover:bg-slate-50"
+                key={rowIndex}
+              >
+                {row.map((value, colIndex) => (
+                  <td className="p-4 border-b border-slate-200" key={colIndex}>
+                    {value}
+                  </td>
+                ))}
+              </tr>
+            ))}
+          </tbody>
+        </table>
+      </div>
+    )
+  );
 }
