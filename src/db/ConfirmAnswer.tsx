@@ -17,7 +17,7 @@ export function ConfirmAnswer({
     let checker = (arr: string[], target: string[]) => {
       return target.every((v) => arr.includes(v));
     };
-    const correctAnswer = ["Julia", "19"];
+    const correctAnswer = ["puss_in_boots_2"];
     const guessAnswer: string[] = [];
     guess.map((g) => guessAnswer.push(String(g)));
 
