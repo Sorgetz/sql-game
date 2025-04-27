@@ -6,9 +6,11 @@ import { Window } from "./components/Window";
 import { ConfirmAnswer } from "./db/ConfirmAnswer";
 import Confetti from "react-confetti";
 import { Button } from "./components/Button";
-import { ICharacter, IMessages, testDialogs } from "./chat/Dialogs";
+import { ICharacter, IMessages, dialogs } from "./chat/Dialogs";
 import ComputerIcon from "./img/computer_icon.png";
 import WordIcon from "./img/world.png";
+import PictureIcon from "./img/picture.png";
+import Ditto from "./img/ditto.gif";
 import { File } from "./workspace/File";
 
 function App() {
@@ -16,17 +18,21 @@ function App() {
   const [sqlWords, setSqlWords] = useState(new Set(["SELECT", "*", "FROM"]));
   const [confirmAnswer, setConfirmAnswer] = useState(false);
   const [guess, setGuess] = useState<initSqlJs.SqlValue[]>([]);
-  const [character, setCharacter] = useState<ICharacter>(testDialogs[0]);
+  const [character, setCharacter] = useState<ICharacter>(dialogs[0]);
   const [isOpenSQL, setIsOpenSQL] = useState(false);
   const [isOpenChat, setIsOpenChat] = useState(false);
+  const [isOpenPicture, setIsOpenPicture] = useState(false);
+  const [password, setPassword] = useState("");
 
   const width = window.innerWidth;
   const height = window.innerHeight;
   const [confetti, setConfetti] = useState(false);
 
+  const isCorrectPassword = password == "6969";
+
   const [allMessages, setAllMessages] = useState<Record<string, IMessages[]>>(
     () => {
-      const firstChar = testDialogs[0];
+      const firstChar = dialogs[0];
       return {
         [firstChar.name]: [
           {
@@ -41,7 +47,7 @@ function App() {
   const currentMessages = allMessages[character.name] || [];
 
   const [choices, setChoices] = useState<string[] | null>(
-    testDialogs[0].dialog_options[0].choices
+    dialogs[0].dialog_options[0].choices
   );
 
   function handleButton(e: React.MouseEvent<HTMLButtonElement, MouseEvent>) {
@@ -106,7 +112,10 @@ function App() {
 
       {confetti && <Confetti width={width} height={height} />}
 
-      <div id="container" className="bg-[#CCA3FF] w-300 h-150">
+      <div
+        id="container"
+        className="border-2 border-black bg-[#CCA3FF] w-full h-150"
+      >
         <div className="flex flex-col">
           <File
             src={ComputerIcon}
@@ -118,38 +127,60 @@ function App() {
             name="chat.exe"
             openWindow={() => setIsOpenChat(!isOpenChat)}
           />
+          <File
+            src={PictureIcon}
+            name="image.png"
+            openWindow={() => setIsOpenPicture(!isOpenPicture)}
+          />
         </div>
+
+        {isOpenPicture && (
+          <Window closeWindow={() => setIsOpenPicture(false)} id="ditto">
+            <img src={Ditto} />
+          </Window>
+        )}
         {isOpenSQL && (
           <Window closeWindow={() => setIsOpenSQL(false)} id="sql-ui">
-            <div
-              id="sql-ui-container"
-              className=" w-100 max-h-120 overflow-y-auto p-2"
-            >
-              <textarea
-                className="h-10 border-2 border-black m-1 w-[95%]"
-                rows={3}
-                value={sqlQuery}
-                readOnly={true}
-              />
-              <div className="flex-wrap">
-                {Array.from(sqlWords).map((word, index) => (
-                  <Button key={index} onClick={handleButton}>
-                    {word}
-                  </Button>
-                ))}
+            {isCorrectPassword ? (
+              <div
+                id="sql-ui-container"
+                className=" w-150 max-h-120 overflow-y-auto p-2"
+              >
+                <textarea
+                  className="h-10 border-2 border-black m-1 w-[95%]"
+                  rows={3}
+                  value={sqlQuery}
+                  readOnly={true}
+                />
+                <div className="flex-wrap">
+                  {Array.from(sqlWords).map((word, index) => (
+                    <Button key={index} onClick={handleButton}>
+                      {word}
+                    </Button>
+                  ))}
 
-                <Button onClick={() => setSqlQuery("")}>LIMPAR</Button>
-                <Button onClick={handleRemove}>{`<`}</Button>
+                  <Button onClick={() => setSqlQuery("")}>LIMPAR</Button>
+                  <Button onClick={handleRemove}>{`<`}</Button>
+                </div>
+
+                <Statements sqlQuery={sqlQuery} validateAnswer={openModal} />
               </div>
-
-              <Statements sqlQuery={sqlQuery} validateAnswer={openModal} />
-            </div>
+            ) : (
+              <div className="p-2">
+                <p>Insira a senha:</p>
+                <input
+                  onChange={(e) => setPassword(e.target.value)}
+                  value={password}
+                  className="border-2"
+                />
+              </div>
+            )}
           </Window>
         )}
 
         {isOpenChat && (
           <Window closeWindow={() => setIsOpenChat(false)} id="chat">
-            <div className="w-100 h-100 flex">
+            <div className="w-120 h-100 flex">
               <Sidebar changeChat={changeChat} />
               <Messages
                 character={character}
@@ -163,8 +194,9 @@ function App() {
           </Window>
         )}
       </div>
-
-      <footer className="border-2 border-black p-2" />
+      <footer className="border-b-2 border-x-2 border-black p-2 bg-[#00C2FA]">
+        <div className="border-1 border-b-2 border-r-2 w-40 p-1 text-center">Só Quero Lembrar</div>
+      </footer>
     </>
   );
 }

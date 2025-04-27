@@ -37,7 +37,7 @@ export function Window({
         className="border-black border-b-2 cursor-pointer px-2 py-1 text-white flex justify-between w-full"
         style={{ backgroundColor: color }}
       >
-        {`${id}.exe`}
+        {`${id}`}
         <div
           onClick={() => {
             const window = document.getElementById(`content-${id}`)!;

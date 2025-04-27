@@ -41,7 +41,7 @@ export function Messages({
 
   return (
     <>
-      <div className="overflow-y-auto w-200">
+      <div className="overflow-y-auto w-250">
         {messages.map((obj, index) => {
           return obj.user === "Outro"
             ? obj.messages.map((msg, idx) => (

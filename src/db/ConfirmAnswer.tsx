@@ -33,10 +33,9 @@ export function ConfirmAnswer({
     <>
       {!isWrong ? (
         <div className="w-screen h-screen bg-black/25 flex justify-center items-center fixed z-[1000]">
-          <Window id="confirm">
+          <Window closeWindow={closeModal} id="confirm">
             <div className="border-2 border-black w-50 p-4 bg-white">
               <p>Tem certezas?</p>
-              <p>{guess.join(" - ")}</p>
               <Button onClick={validateAnswer}>Sim</Button>
               <Button onClick={closeModal}>Não</Button>
             </div>
@@ -44,7 +43,7 @@ export function ConfirmAnswer({
         </div>
       ) : (
         <div className="w-screen h-screen bg-black/25 flex justify-center items-center fixed z-[1000]">
-          <Window id="confirm">
+          <Window closeWindow={closeModal} id="confirm">
             <div className="border-2 border-black w-50 p-4 bg-white">
               <p>ERRRROWWWWWWW?</p>
               <Button onClick={closeModal}>Sair</Button>

@@ -1,4 +1,4 @@
-import { ICharacter, testDialogs } from "./Dialogs";
+import { ICharacter, dialogs } from "./Dialogs";
 
 export function Sidebar({
   changeChat,
@@ -9,7 +9,7 @@ export function Sidebar({
     <>
       <div className="border-r-2 w-full">
         <div>
-          {testDialogs.map((char, index) => (
+          {dialogs.map((char, index) => (
             <div
               key={index}
               onClick={() => changeChat(char)}
