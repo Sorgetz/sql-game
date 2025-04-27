@@ -1,5 +1,12 @@
 export const dialog_first_character: IDialogOptions[] = [
   {
+    name: "PrimeiraMensagem",
+    sendMessages: [
+      "Cara, finalmente encontrei o nosso suspeito daquele caso de roubo digital de Robux! Ele está na tabela [&top_5_jogadores&]",
+    ],
+    choices: ["Claro, claro, claro. Mas como que eu acesso esses dados?"],
+  },
+  {
     name: "Claro, claro, claro. Mas como que eu acesso esses dados?",
     sendMessages: [
       "Tá vendo aquele ícone na área de trabalho, abre ele. A senha é 6969",
@@ -40,3 +47,30 @@ export interface IMessages {
   user: string;
   messages: string[];
 }
+
+export interface ICharacter {
+  name: string;
+  dialog_options: IDialogOptions[];
+}
+
+export const testDialogs: ICharacter[] = [
+  {
+    name: "Josias",
+    dialog_options: dialog_first_character,
+  },
+  {
+    name: "Bianca",
+    dialog_options: [
+      {
+        name: "PrimeiraMensagem",
+        sendMessages: ["Testando ei som ei"],
+        choices: ["ok"],
+      },
+      {
+        name: "ok",
+        sendMessages: ["concordo"],
+        choices: ["Ah, blz"],
+      },
+    ],
+  },
+];

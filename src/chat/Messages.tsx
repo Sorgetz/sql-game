@@ -1,49 +1,47 @@
-import { useEffect, useState } from "react";
 import { FriendMessage } from "./FriendMessage";
 import { UserMessage } from "./UserMessage";
-import { dialog_first_character, IMessages } from "./Dialogs";
+import { ICharacter, IMessages } from "./Dialogs";
 
-export function Messages({ newWord }: { newWord: (text: string) => void }) {
-  const initalMessages: IMessages[] = [
-    {
-      user: "Outro",
-      messages: [
-        "Cara, finalmente encontrei o nosso suspeito daquele caso de roubo digital de Robux! Ele está na tabela [&top_5_jogadores_roblox_brasil&]",
-      ],
-    },
-  ];
+interface MessageInfo {
+  newWord: (text: string) => void;
+  character: ICharacter;
+  messages: IMessages[];
+  setMessages: (newMessages: IMessages[]) => void;
+  choices: string[] | null;
+  setChoices: React.Dispatch<React.SetStateAction<string[] | null>>;
+}
 
-  const [choices, setChoices] = useState([
-    "Claro, claro, claro. Mas como que eu acesso esses dados?",
-  ]);
-  const [messages, setMessages] = useState(initalMessages);
-  useEffect(() => {}, [choices, messages]);
-
+export function Messages({
+  newWord,
+  character,
+  messages,
+  setMessages,
+  choices,
+  setChoices,
+}: MessageInfo) {
   function choseOption(e: React.MouseEvent<HTMLButtonElement, MouseEvent>) {
     const choice = e.currentTarget.textContent as string;
-    const index = dialog_first_character.findIndex(
-      (option) => option.name == choice
+    const index = character.dialog_options.findIndex(
+      (option) => option.name === choice
     );
+
     const newUserMessage = {
       user: "Usuario",
       messages: [choice],
     };
     const newOtherMessage = {
       user: "Outro",
-      messages: dialog_first_character[index].sendMessages,
+      messages: character.dialog_options[index].sendMessages,
     };
-    setMessages((prevMessages) => [
-      ...prevMessages,
-      newUserMessage,
-      newOtherMessage,
-    ]);
-    setChoices(dialog_first_character[index].choices);
-    console.log(messages);
+
+    const updatedMessages = [...messages, newUserMessage, newOtherMessage];
+    setMessages(updatedMessages);
+    setChoices(character.dialog_options[index].choices);
   }
 
   return (
     <>
-      <div className="overflow-y-auto">
+      <div className="overflow-y-auto w-200">
         {messages.map((obj, index) => {
           return obj.user === "Outro"
             ? obj.messages.map((msg, idx) => (
@@ -54,22 +52,20 @@ export function Messages({ newWord }: { newWord: (text: string) => void }) {
                 />
               ))
             : obj.messages.map((msg, idx) => (
-                <UserMessage key={index} message={msg} />
+                <UserMessage key={idx} message={msg} />
               ));
         })}
 
         {choices != null && (
-          <div className="flex flex-col items-end">
-            {choices.map((choice) => (
-              <>
-                <button
-                  onClick={choseOption}
-                  className="cursor-pointer rounded-xl rounded-tr-none hover:bg-amber-950 bg-amber-600 p-2 mx-2 text-white max-w-[70%] wrap-break-word"
-                >
-                  {choice}
-                </button>
-                <br />
-              </>
+          <div className="flex flex-col items-end gap-2">
+            {choices.map((choice, index) => (
+              <button
+                key={index}
+                onClick={choseOption}
+                className="cursor-pointer rounded-xl rounded-tr-none hover:bg-amber-950 bg-amber-600 p-2 mx-2 text-white max-w-[70%] wrap-break-word"
+              >
+                {choice}
+              </button>
             ))}
           </div>
         )}
