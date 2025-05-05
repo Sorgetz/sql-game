@@ -1,63 +1,41 @@
 import { useEffect, useState } from "react";
 import initSqlJs, { Database } from "sql.js";
+import { scriptCreateDB } from "./insert";
 
 async function createDB() {
   const SQL = await initSqlJs({
     locateFile: (file: string) => `https://sql.js.org/dist/${file}`,
   });
   const db = new SQL.Database();
-  const sql = `
-    CREATE TABLE IF NOT EXISTS TopFiveBr (
-                id INTEGER PRIMARY KEY AUTOINCREMENT,
-                nickname TEXT NOT NULL,
-                rank INTEGER,
-                last_login DATETIME,
-                created_at DATETIME
-            );
-
-    CREATE TABLE IF NOT EXISTS TopFiveBrBanckAccount (
-                id INTEGER PRIMARY KEY AUTOINCREMENT,
-                playerId INTEGER,
-                robux INTEGER,
-                FOREIGN KEY (playerId) REFERENCES TopFiveBr(id)
-            );
-    INSERT INTO TopFiveBr(nickname, rank, last_login, created_at) VALUES ('Saisoj', 1, '2025-04-25 12:00:00', '2006-09-01 12:00:00');
-    INSERT INTO TopFiveBr(nickname, rank, last_login, created_at) VALUES ('imbatman', 3, '2025-04-23 12:00:00', '2025-04-21 12:00:00');
-    INSERT INTO TopFiveBr(nickname, rank, last_login, created_at) VALUES ('puss_in_boots_2', 2, '2025-04-22 12:00:00', '2025-04-20 12:00:00');
-    INSERT INTO TopFiveBr(nickname, rank, last_login, created_at) VALUES ('super_man', 5, '2025-04-15 12:00:00', '2025-03-09 12:00:00');
-    INSERT INTO TopFiveBr(nickname, rank, last_login, created_at) VALUES ('uatizapp', 4, '2025-01-01 12:00:00', '2024-12-31 12:00:00');
-
-    INSERT INTO TopFiveBrBanckAccount(playerId, robux) VALUES (1, 5);
-    INSERT INTO TopFiveBrBanckAccount(playerId, robux) VALUES (2, 9999);
-    INSERT INTO TopFiveBrBanckAccount(playerId, robux) VALUES (3, 10659);
-    INSERT INTO TopFiveBrBanckAccount(playerId, robux) VALUES (4, 10658);
-    INSERT INTO TopFiveBrBanckAccount(playerId, robux) VALUES (5, 11528);
-    `;
-  db.run(sql);
+  db.run(scriptCreateDB);
   return db;
-}
-
-function runQuery(query: string, db: Database) {
-  try {
-    const result = db.exec(query);
-    const columns = result[0] ? result[0].columns : [];
-    const values = result[0] ? result[0].values : [];
-
-    return { columns, values };
-  } catch (e) {
-    console.log("ainda nao");
-  }
 }
 
 export function Statements({
   sqlQuery,
   validateAnswer,
+  run,
 }: {
   sqlQuery: string;
   validateAnswer: (row: initSqlJs.SqlValue[]) => void;
+  run: boolean;
 }) {
   const [columns, setColumns] = useState<string[]>([]);
   const [values, setValues] = useState<initSqlJs.SqlValue[][]>([]);
+  const [error, setError] = useState(false);
+
+  function runQuery(query: string, db: Database) {
+    try {
+      const result = db.exec(query);
+      const columns = result[0] ? result[0].columns : [];
+      const values = result[0] ? result[0].values : [];
+
+      return { columns, values };
+    } catch (e) {
+      console.log("ainda nao");
+      setError(true);
+    }
+  }
 
   useEffect(() => {
     const fetchData = async () => {
@@ -67,6 +45,7 @@ export function Statements({
         if (result) {
           setColumns(result.columns);
           setValues(result.values);
+          setError(false);
         }
       }
     };
@@ -74,7 +53,8 @@ export function Statements({
   }, [sqlQuery]);
 
   return (
-    sqlQuery.length > 0 && (
+    run &&
+    !error && (
       <div className="relative flex flex-col overflow-x-auto text-gray-700 bg-white shadow-md rounded-lg bg-clip-border max-h-100">
         <table className=" text-left table-auto ">
           <thead>

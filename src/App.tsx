@@ -12,6 +12,7 @@ import WordIcon from "./img/world.png";
 import PictureIcon from "./img/picture.png";
 import Ditto from "./img/ditto.gif";
 import { File } from "./workspace/File";
+import { SQLButton } from "./components/SQLButton";
 
 function App() {
   const [sqlQuery, setSqlQuery] = useState("");
@@ -23,6 +24,8 @@ function App() {
   const [isOpenChat, setIsOpenChat] = useState(false);
   const [isOpenPicture, setIsOpenPicture] = useState(false);
   const [password, setPassword] = useState("");
+  const [translate, setTranslate] = useState(false);
+  const [runQuery, setRunQuery] = useState(false);
 
   const width = window.innerWidth;
   const height = window.innerHeight;
@@ -50,16 +53,17 @@ function App() {
     dialogs[0].dialog_options[0].choices
   );
 
-  function handleButton(e: React.MouseEvent<HTMLButtonElement, MouseEvent>) {
+  function handleButton(word: string) {
     if (sqlQuery.length > 0) {
-      setSqlQuery(sqlQuery + " " + e.currentTarget.textContent);
+      setSqlQuery(sqlQuery + " " + word);
     } else {
-      setSqlQuery(sqlQuery + e.currentTarget.textContent);
+      setSqlQuery(sqlQuery + word);
     }
   }
 
   function handleRemove() {
     setSqlQuery(sqlQuery.split(" ").slice(0, -1).join(" "));
+    setRunQuery(false);
   }
 
   function newWord(text: string) {
@@ -153,17 +157,40 @@ function App() {
                   readOnly={true}
                 />
                 <div className="flex-wrap">
-                  {Array.from(sqlWords).map((word, index) => (
+                  {/* {Array.from(sqlWords).map((word, index) => (
                     <Button key={index} onClick={handleButton}>
                       {word}
                     </Button>
-                  ))}
+                  ))} */}
 
-                  <Button onClick={() => setSqlQuery("")}>LIMPAR</Button>
+                  <SQLButton
+                    sqlWords={sqlWords}
+                    handleButton={handleButton}
+                    translate={translate}
+                  />
+
+                  <Button
+                    onClick={() => {
+                      setSqlQuery("");
+                      setRunQuery(false);
+                    }}
+                  >
+                    LIMPAR
+                  </Button>
                   <Button onClick={handleRemove}>{`<`}</Button>
+                  <Button onClick={() => setRunQuery(true)}>Executar</Button>
+
+                  <input
+                    type="checkbox"
+                    onClick={(e) => setTranslate(e.currentTarget.checked)}
+                  />
                 </div>
 
-                <Statements sqlQuery={sqlQuery} validateAnswer={openModal} />
+                <Statements
+                  run={runQuery}
+                  sqlQuery={sqlQuery}
+                  validateAnswer={openModal}
+                />
               </div>
             ) : (
               <div className="p-2">
@@ -195,7 +222,9 @@ function App() {
         )}
       </div>
       <footer className="border-b-2 border-x-2 border-black p-2 bg-[#00C2FA]">
-        <div className="border-1 border-b-2 border-r-2 w-40 p-1 text-center">Só Quero Lembrar</div>
+        <div className="border-1 border-b-2 border-r-2 w-40 p-1 text-center">
+          Só Quero Lembrar
+        </div>
       </footer>
     </>
   );

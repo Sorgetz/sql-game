@@ -62,7 +62,7 @@ export function Messages({
               <button
                 key={index}
                 onClick={choseOption}
-                className="cursor-pointer rounded-xl rounded-tr-none hover:bg-amber-950 bg-amber-600 p-2 mx-2 text-white max-w-[70%] wrap-break-word"
+                className="mt-4 cursor-pointer rounded-xl rounded-tr-none hover:bg-amber-950 bg-amber-600 p-2 mx-2 text-white max-w-[70%] wrap-break-word animate-bounce"
               >
                 {choice}
               </button>
