@@ -265,7 +265,7 @@ export const thirdLevelDialogs: ICharacter[] = [
           "Tem subestações com instabilidades pontuais, enquanto outras um padrão muito mais recorrente",
           "Uma análise ordenada pode ajudar a destacar isso",
           "Sabe",
-          "você pode utilizar o comando [@Order@] By",
+          "você pode utilizar o comando [@Order By@]",
           "Mas você já sabia disso",
         ],
         choices: [
