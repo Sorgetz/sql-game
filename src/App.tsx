@@ -123,7 +123,11 @@ function App() {
       if (keyWords?.has(lastWord) && keyWords?.has(word)) {
         setSqlQuery(sqlQuery + ", " + word);
         return;
-      } else if (aliasWords?.has(lastWord) && keyWords?.has(word)) {
+      } else if (
+        aliasWords?.has(lastWord) &&
+        keyWords?.has(word) &&
+        currentLevel >= 5
+      ) {
         setSqlQuery(sqlQuery + "." + word);
         return;
       }
@@ -140,10 +144,12 @@ function App() {
 
   function newTableWord(text: string) {
     setTableWords((prev) => new Set([...(prev ?? new Set()), text]));
-    setAliasWords(
-      (prev) =>
-        new Set([...(prev ?? new Set()), text.slice(0, 2).toUpperCase()])
-    );
+    if (currentLevel >= 5) {
+      setAliasWords(
+        (prev) =>
+          new Set([...(prev ?? new Set()), text.slice(0, 2).toUpperCase()])
+      );
+    }
   }
 
   function newKeyWord(text: string) {
