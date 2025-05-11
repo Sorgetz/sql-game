@@ -47,6 +47,9 @@ function App() {
 
   const [currentLevel, setCurrentLevel] = useState(1);
   const [correctAnswer, setCorrectAnswer] = useState(["puss_in_boots_2"]);
+  const [showNotification, setShowNotification] = useState(
+    getNotificationValue(firstLevelDialogs)
+  );
 
   const isCorrectPassword = password == "6969";
 
@@ -78,17 +81,25 @@ function App() {
     switch (nextLevel) {
       case 2:
         setCorrectAnswer(["D.I.T.T.O"]);
+        changeChat(secondLevelDialogs[0]);
+        setShowNotification(getNotificationValue(secondLevelDialogs));
         setCharactersInfo(secondLevelDialogs);
         break;
       case 3:
         setCorrectAnswer(["Débora Machado"]);
+        changeChat(thirdLevelDialogs[0]);
+        setShowNotification(getNotificationValue(thirdLevelDialogs));
         setCharactersInfo(thirdLevelDialogs);
         break;
       case 4:
         setCorrectAnswer(["Débora Machado"]);
+        changeChat(fourthLevelDialogs[0]);
+        setShowNotification(getNotificationValue(fourthLevelDialogs));
         setCharactersInfo(fourthLevelDialogs);
         break;
       case 5:
+        changeChat(fifthLevelDialogs[0]);
+        setShowNotification(getNotificationValue(fifthLevelDialogs));
         setCharactersInfo(fifthLevelDialogs);
         setCorrectAnswer([]);
         break;
@@ -96,6 +107,10 @@ function App() {
         break;
     }
     setCurrentLevel(nextLevel);
+  }
+
+  function getNotificationValue(chars: ICharacter[]) {
+    return chars[0].dialog_options[0].sendMessages.length;
   }
 
   const [choices, setChoices] = useState<string[] | null>(
@@ -180,15 +195,6 @@ function App() {
 
   return (
     <>
-      {confirmAnswer && (
-        <ConfirmAnswer
-          correctAnswer={correctAnswer}
-          closeModal={() => setConfirmAnswer(false)}
-          setConfetti={setConfetti}
-          guess={guess}
-        />
-      )}
-
       {confetti && (
         <div className="bg-[#CCA3FF] fixed z-[1000] w-full h-full flex flex-col justify-center items-center">
           <p className="text-[100px] text-white mb-8">Nível concluído!</p>
@@ -208,6 +214,14 @@ function App() {
 
         <div className="flex flex-col z-10">
           <WindowProvider>
+            {confirmAnswer && (
+              <ConfirmAnswer
+                correctAnswer={correctAnswer}
+                closeModal={() => setConfirmAnswer(false)}
+                setConfetti={setConfetti}
+                guess={guess}
+              />
+            )}
             <Window src={ComputerIcon} name="sql-ui.exe">
               {isCorrectPassword ? (
                 <div
@@ -259,7 +273,11 @@ function App() {
               )}
             </Window>
 
-            <Window name="chat.exe" src={WordIcon}>
+            <Window
+              name="chat.exe"
+              src={WordIcon}
+              notificationCount={showNotification}
+            >
               <div className="w-140 h-100 flex">
                 <Sidebar
                   dialogs={charactersInfo}

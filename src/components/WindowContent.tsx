@@ -50,19 +50,21 @@ export function WindowContent({ name, children, onClose }: IProps) {
         style={{ backgroundColor: color }}
       >
         {`${name}`}
-        <div
-          onClick={() => {
-            const window = document.getElementById(`content-${name}`)!;
-            window.style.transition = "0.5s";
-            window.style.scale = "0";
-            setTimeout(() => {
-              onClose();
-            }, 500);
-          }}
-          className="border-2 border-black px-2"
-        >
-          X
-        </div>
+        {name !== "confirm" && (
+          <div
+            onClick={() => {
+              const window = document.getElementById(`content-${name}`)!;
+              window.style.transition = "0.5s";
+              window.style.scale = "0";
+              setTimeout(() => {
+                onClose();
+              }, 500);
+            }}
+            className="border-2 border-black px-2"
+          >
+            X
+          </div>
+        )}
       </div>
       {children}
     </div>
