@@ -1,7 +1,6 @@
 import { Button } from "./Button";
 
 interface IProps {
-  // setSqlQuery: React.Dispatch<React.SetStateAction<Set<string>[] | null>>;
   sqlWords: Set<string>;
   handleButton: (word: string) => void;
   translate: boolean;

@@ -1,6 +1,8 @@
-import { useEffect, useRef } from "react";
+import { useContext, useEffect, useRef } from "react";
+import { WindowContext } from "../contexts/WindowContext";
 
 export function useDragger(id: string, tab: string): void {
+  const { positions, setPositions } = useContext(WindowContext)!;
   const isClicked = useRef<boolean>(false);
 
   const coords = useRef<{
@@ -18,20 +20,32 @@ export function useDragger(id: string, tab: string): void {
   useEffect(() => {
     const target = document.getElementById(id);
     const buttonTarget = document.getElementById(tab);
-    if (!target) throw new Error("Element with given " + id + " doesn't exist");
-    if (!buttonTarget)
-      throw new Error("Element with given " + id + " doesn't exist");
+    if (!target) return;
+    if (!buttonTarget) return;
 
     const container = target.parentElement;
     if (!container) throw new Error("target element must have a parent");
 
-    target.style.top = "0";
-    target.style.left = "0";
+    const centerX = (window.innerWidth - target.offsetWidth) / 2;
+    const centerY = (window.innerHeight - target.offsetHeight) / 2;
+
+    target.style.top = `${centerY}px`;
+    target.style.left = `${centerX}px`;
 
     const onMouseDown = (e: MouseEvent) => {
+      coords.current.lastX = target.offsetLeft;
+      coords.current.lastY = target.offsetTop;
       isClicked.current = true;
       coords.current.startX = e.clientX;
       coords.current.startY = e.clientY;
+
+      const index = positions.findIndex((posisition) => posisition == id);
+      if (index !== -1) {
+        setPositions((prev) => {
+          const newPositions = prev.filter((pos) => pos !== id);
+          return [...newPositions, id];
+        });
+      }
     };
 
     const onMouseUp = (_e: MouseEvent) => {

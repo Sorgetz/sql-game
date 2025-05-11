@@ -3,7 +3,9 @@ import { UserMessage } from "./UserMessage";
 import { ICharacter, IMessages } from "./Dialogs";
 
 interface MessageInfo {
-  newWord: (text: string) => void;
+  newTableWord: (text: string) => void;
+  newKeyWord: (text: string) => void;
+  newSQLWord: (text: string) => void;
   character: ICharacter;
   messages: IMessages[];
   setMessages: (newMessages: IMessages[]) => void;
@@ -12,7 +14,9 @@ interface MessageInfo {
 }
 
 export function Messages({
-  newWord,
+  newTableWord,
+  newKeyWord,
+  newSQLWord,
   character,
   messages,
   setMessages,
@@ -46,9 +50,12 @@ export function Messages({
           return obj.user === "Outro"
             ? obj.messages.map((msg, idx) => (
                 <FriendMessage
+                  profilePic={character.profile_picture}
                   key={`${index}-${idx}`}
                   message={msg}
-                  newWord={newWord}
+                  newTableWord={newTableWord}
+                  newKeyWord={newKeyWord}
+                  newSQLWord={newSQLWord}
                 />
               ))
             : obj.messages.map((msg, idx) => (
@@ -57,7 +64,7 @@ export function Messages({
         })}
 
         {choices != null && (
-          <div className="flex flex-col items-end gap-2">
+          <div className="flex flex-col items-end gap-2 m-6">
             {choices.map((choice, index) => (
               <button
                 key={index}

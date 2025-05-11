@@ -20,7 +20,7 @@ export function File({ src, name, openWindow }: IProps) {
       className="mx-4 m-2 cursor-pointer w-25 flex flex-col py-2 px-5 text-white border border-white bg-[#00c2fa]/50"
     >
       <img src={src}></img>
-      {name}
+      <span className="whitespace-nowrap">{name}</span>
     </div>
   ) : (
     <div
@@ -29,7 +29,7 @@ export function File({ src, name, openWindow }: IProps) {
       className="mx-4 m-2 cursor-pointer w-25 flex flex-col py-2 px-5"
     >
       <img src={src}></img>
-      {name}
+      <span className="whitespace-nowrap">{name}</span>
     </div>
   );
 }

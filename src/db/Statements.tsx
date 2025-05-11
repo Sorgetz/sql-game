@@ -54,7 +54,9 @@ export function Statements({
 
   return (
     run &&
-    !error && (
+    (error ? (
+      <div>Algo deu errado</div>
+    ) : (
       <div className="relative flex flex-col overflow-x-auto text-gray-700 bg-white shadow-md rounded-lg bg-clip-border max-h-100">
         <table className=" text-left table-auto ">
           <thead>
@@ -86,6 +88,9 @@ export function Statements({
           </tbody>
         </table>
       </div>
-    )
+    ))
   );
+  // ) : (
+  //   <p>Utilize o BookWords.exe para selecionar as palavras e formar o SQL!</p>
+  // )
 }
